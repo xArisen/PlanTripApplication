@@ -45,12 +45,8 @@ public class ExternalApi1WeatherService implements WeatherService {
     @Override
     public boolean checkIfWeatherForDayAndCityIsOkForBike(String sourceCity, String dayName){
         Weather weather = getDayWeatherForCity(sourceCity, dayName);
-        if((weather.getTemperature() >= 10) && (weather.getTemperature() <= 25)){
-            if (weather.getProbabilityOfPrecipitation() < 50){
-                if(weather.getWind() < 70){
-                    return true;
-                }
-            }
+        if((weather.getTemperature() >= 10) && (weather.getTemperature() <= 25) && (weather.getProbabilityOfPrecipitation() < 50) && (weather.getWind() < 70)){
+            return true;
         }
         return false;
     }
@@ -65,27 +61,18 @@ public class ExternalApi1WeatherService implements WeatherService {
 
     @Override
     public Day getDayWeatherForAllCities(String dayName){
-        Optional<Day> day = Arrays.stream(week.getDays())
-                .filter(anyDay -> anyDay.getDay().equals(dayName)).findAny();
+        Day day = Arrays.stream(week.getDays())
+                .filter(anyDay -> anyDay.getDay().equals(dayName))
+                .findAny().orElseThrow(() -> new IllegalArgumentException("Invalid day."));
 
-        if (day.isPresent()){
-            return day.get();
-        }
-        else {
-            throw new IllegalArgumentException("Invalid day.");
-        }
+        return day;
     }
 
     @Override
     public City getCityForDay(Day day, String sourceCity){
-        Optional<City> city = Arrays.stream(day.getCities())
-                .filter(anyCity -> anyCity.getCity().equals(sourceCity)).findAny();
+        City city = Arrays.stream(day.getCities())
+                .filter(anyCity -> anyCity.getCity().equals(sourceCity)).findAny().orElseThrow(() -> new IllegalArgumentException("Invalid city."));
 
-        if (city.isPresent()){
-            return city.get();
-        }
-        else {
-            throw new IllegalArgumentException("Invalid city.");
-        }
+        return city;
     }
 }
