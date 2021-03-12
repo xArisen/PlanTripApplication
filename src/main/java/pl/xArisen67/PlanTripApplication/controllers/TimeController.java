@@ -10,7 +10,6 @@ import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
 
 @RestController
 public class TimeController {
-
     final
     TimeService timeService;
 
