@@ -61,15 +61,10 @@ public class ExternalApi1TransportationService implements TransportationService 
 
     @Override
     public Timetable getTimetable(String source, String destination){
-        Optional <Timetable> timetable = Arrays.stream(transportation.getTimetable())
+        Timetable timetable = Arrays.stream(transportation.getTimetable())
                 .filter(anyTimetable -> (anyTimetable.getSource().equals(source) && anyTimetable.getDestination().equals(destination)))
-                .findAny();
+                .findAny().orElseThrow(() -> new IllegalArgumentException("Invalid city."));
 
-        if(!timetable.isPresent()){
-            throw new IllegalArgumentException("Invalid city.");
-        }
-        else {
-            return timetable.get();
-        }
+        return timetable;
     }
 }
