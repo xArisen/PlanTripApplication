@@ -1,5 +1,8 @@
 package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -9,6 +12,7 @@ import java.net.URL;
 
 @Service
 public class JsonReader {
+    private static final Logger logger = LoggerFactory.getLogger(BufferedReader.class);
     public static String readJsonFromUrl(String url){
         StringBuffer response = new StringBuffer();
 
@@ -27,7 +31,7 @@ public class JsonReader {
             in.close();
 
         }catch(Exception e){
-            System.out.println(e);
+            logger.error("Context message", e);
         }
 
         return response.toString();
