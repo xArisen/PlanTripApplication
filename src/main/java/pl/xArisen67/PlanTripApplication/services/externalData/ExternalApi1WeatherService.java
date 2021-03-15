@@ -12,7 +12,6 @@ import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.WeatherService;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 @Service
 public class ExternalApi1WeatherService implements WeatherService {
@@ -38,7 +37,7 @@ public class ExternalApi1WeatherService implements WeatherService {
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateWeatherData(){
         String urlJsonWeatherData = JsonReader.readJsonFromUrl(weatherDataUrl);
-        String resString = JsonFormatter.addTypeToJsonData(urlJsonWeatherData, "week");
+        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
         week = (Week) JsonMapper.mapJsonToObject(resString, week);
     }
 

@@ -37,7 +37,7 @@ public class ExternalApi1TransportationService implements TransportationService 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateTransportationData(){
         String urlJsonTransportationData = JsonReader.readJsonFromUrl(transportationDataUrl);
-        String resString = JsonFormatter.addTypeToJsonData(urlJsonTransportationData, "transportation");
+        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
         transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
     }
 
