@@ -32,8 +32,9 @@ public class ExternalApi1DistanceService implements DistanceService {
     }
 
     private void updateDistanceData(){
+        //TODO should try catch JsonFormatter.addTypeToJsonDataInTheBeginning exception?
         String urlJsonDistanceData = JsonReader.readJsonFromUrl(distanceDataUrl);
-        String resString = JsonFormatter.addTypeToJsonData(urlJsonDistanceData, "distances");
+        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
         distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
     }
 

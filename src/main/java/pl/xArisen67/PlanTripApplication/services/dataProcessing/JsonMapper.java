@@ -13,7 +13,6 @@ public class JsonMapper {
     private static final Logger logger = LoggerFactory.getLogger(ObjectMapper.class);
 
     public static ExternalDataObject mapJsonToObject(String json, ExternalDataObject object){
-
         try {
             object = objectMapper.readValue(json, ExternalDataObject.class);
         }catch (Exception e){
