@@ -1,30 +1,31 @@
-package pl.xArisen67.PlanTripApplication.services.externalData;
+package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import pl.xArisen67.PlanTripApplication.models.transportation.Timetable;
-import pl.xArisen67.PlanTripApplication.models.transportation.Transportation;
-import pl.xArisen67.PlanTripApplication.models.transportation.Travel;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Travel;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.TransportationService;
 
 import java.time.LocalTime;
 import java.util.*;
 
 @Service
-public class ExternalApi1TransportationService implements TransportationService {
+public class TransportationApi1Service implements TransportationService {
     private Transportation transportation;
     private String transportationDataUrl;
 
     //default takes Company1 data
-    public ExternalApi1TransportationService() throws InterruptedException{
+    public TransportationApi1Service() throws InterruptedException{
         transportationDataUrl = Company1.TRANSPORTATION_DATA_URL.toString();
         updateTransportationData();
     }
 
-    public ExternalApi1TransportationService(String transportationDataUrl){
+    public TransportationApi1Service(String transportationDataUrl){
         changeTransportationDataUrl(transportationDataUrl);
     }
 

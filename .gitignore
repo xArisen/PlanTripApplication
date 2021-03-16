@@ -4,7 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-src/main/java/pl/xArisen67/PlanTripApplication/services/externalData/Company1.java
+src/main/java/pl/xArisen67/PlanTripApplication/services/externalData/providers/Company1.java
 
 ### STS ###
 .apt_generated

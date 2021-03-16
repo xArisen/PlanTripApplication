@@ -1,4 +1,4 @@
-package pl.xArisen67.PlanTripApplication.models.weather;
+package pl.xArisen67.PlanTripApplication.models.externalData.api1.weather;
 
 import lombok.Data;
 

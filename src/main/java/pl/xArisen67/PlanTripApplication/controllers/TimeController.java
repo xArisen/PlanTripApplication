@@ -26,7 +26,7 @@ public class TimeController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok(JsonMapper.mapVariableToObject("time", time));
+        return ResponseEntity.ok(JsonMapper.mapVariableToHashMap("time", time));
     }
 
     @GetMapping(value = "/time/bus/{source}/{destination}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -38,7 +38,7 @@ public class TimeController {
              return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok(JsonMapper.mapVariableToObject("time", time));
+        return ResponseEntity.ok(JsonMapper.mapVariableToHashMap("time", time));
     }
 
     @GetMapping(value = "/time/bike/{source}/{destination}/{day}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,6 +50,6 @@ public class TimeController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
-        return ResponseEntity.ok(JsonMapper.mapVariableToObject("time", time));
+        return ResponseEntity.ok(JsonMapper.mapVariableToHashMap("time", time));
     }
 }

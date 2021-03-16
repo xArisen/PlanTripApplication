@@ -1,6 +1,6 @@
 package pl.xArisen67.PlanTripApplication.services.externalData.interfaces;
 
-import pl.xArisen67.PlanTripApplication.models.transportation.Timetable;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
 
 import java.time.LocalTime;
 

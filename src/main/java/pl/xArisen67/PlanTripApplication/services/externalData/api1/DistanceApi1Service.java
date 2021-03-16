@@ -1,28 +1,29 @@
-package pl.xArisen67.PlanTripApplication.services.externalData;
+package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.stereotype.Service;
-import pl.xArisen67.PlanTripApplication.models.distance.Distance;
-import pl.xArisen67.PlanTripApplication.models.distance.DistanceCollection;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.DistanceService;
 
 import java.util.Arrays;
 import java.util.Optional;
 
 @Service
-public class ExternalApi1DistanceService implements DistanceService {
+public class DistanceApi1Service implements DistanceService {
     private DistanceCollection distanceCollection;
     private String distanceDataUrl;
 
     //default takes Company1 data
-    public ExternalApi1DistanceService(){
+    public DistanceApi1Service(){
         distanceDataUrl = Company1.DISTANCE_DATA_URL.toString();
         updateDistanceData();
     }
 
-    public ExternalApi1DistanceService(String distanceDataUrl){
+    public DistanceApi1Service(String distanceDataUrl){
         changeDistanceDataUrl(distanceDataUrl);
     }
 

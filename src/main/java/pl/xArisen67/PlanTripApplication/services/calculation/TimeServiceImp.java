@@ -2,7 +2,7 @@ package pl.xArisen67.PlanTripApplication.services.calculation;
 
 import org.springframework.stereotype.Service;
 import pl.xArisen67.PlanTripApplication.exceptions.WrongResultException;
-import pl.xArisen67.PlanTripApplication.models.transportation.Timetable;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
 import pl.xArisen67.PlanTripApplication.services.calculation.interfaces.TimeService;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.DistanceService;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.TransportationService;
