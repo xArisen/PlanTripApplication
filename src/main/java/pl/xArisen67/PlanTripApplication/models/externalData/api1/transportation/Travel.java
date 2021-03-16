@@ -1,4 +1,4 @@
-package pl.xArisen67.PlanTripApplication.models.transportation;
+package pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation;
 
 import lombok.Data;
 

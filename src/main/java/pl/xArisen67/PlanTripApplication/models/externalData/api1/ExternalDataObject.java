@@ -1,12 +1,12 @@
-package pl.xArisen67.PlanTripApplication.models;
+package pl.xArisen67.PlanTripApplication.models.externalData.api1;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
-import pl.xArisen67.PlanTripApplication.models.distance.DistanceCollection;
-import pl.xArisen67.PlanTripApplication.models.transportation.Transportation;
-import pl.xArisen67.PlanTripApplication.models.weather.Week;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Week;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)

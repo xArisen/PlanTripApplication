@@ -1,30 +1,31 @@
-package pl.xArisen67.PlanTripApplication.services.externalData;
+package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import pl.xArisen67.PlanTripApplication.models.weather.City;
-import pl.xArisen67.PlanTripApplication.models.weather.Day;
-import pl.xArisen67.PlanTripApplication.models.weather.Weather;
-import pl.xArisen67.PlanTripApplication.models.weather.Week;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.City;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Day;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Weather;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Week;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.WeatherService;
 
 import java.util.Arrays;
 
 @Service
-public class ExternalApi1WeatherService implements WeatherService {
+public class WeatherApi1Service implements WeatherService {
     private Week week;
     private String weatherDataUrl;
 
     //default takes Company1 data
-    public ExternalApi1WeatherService(){
+    public WeatherApi1Service(){
         weatherDataUrl = Company1.WEATHER_DATA_URL.toString();
         updateWeatherData();
     }
 
-    public ExternalApi1WeatherService(String weatherDataUrl){
+    public WeatherApi1Service(String weatherDataUrl){
         changeWeatherDataUrl(weatherDataUrl);
     }
 

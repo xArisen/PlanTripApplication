@@ -1,4 +1,4 @@
-package pl.xArisen67.PlanTripApplication.models.distance;
+package pl.xArisen67.PlanTripApplication.models.externalData.api1.distance;
 
 import lombok.Data;
 

@@ -9,7 +9,7 @@ public class JsonFormatter {
 
     public static String addTypeToJsonDataInTheBeginning(String jsonInString, String typeName){
         if(checkIfStringIsValidJson(jsonInString)){
-            String type = String.format("\"@type\": \"%s\", ", typeName);
+            String type = jsonInString.equals("{}") ? String.format("\"@type\": \"%s\"", typeName) : String.format("\"@type\": \"%s\", ", typeName);
             StringBuilder resString = new StringBuilder(jsonInString);
             resString.insert(1, type);
             return resString.toString();
