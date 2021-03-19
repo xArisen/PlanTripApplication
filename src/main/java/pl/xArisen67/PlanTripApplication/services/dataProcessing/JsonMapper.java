@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JsonMapper {
-    private  static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final Logger logger = LoggerFactory.getLogger(ObjectMapper.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(JsonMapper.class);
 
     public static ExternalDataObject mapJsonToObject(String json, ExternalDataObject object){
         try {
@@ -18,7 +18,6 @@ public class JsonMapper {
         }catch (Exception e){
             logger.error("Context message", e);
         }
-
         return object;
     }
 

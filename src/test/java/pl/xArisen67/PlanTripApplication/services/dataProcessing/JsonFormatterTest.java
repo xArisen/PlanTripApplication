@@ -8,12 +8,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class JsonFormatterTest {
-
-
     private static String correctJsonInString;
     private static String wrongJsonInString;
     private static String emptyJsonInString;
-    private static String typeName = "person";
+    private static String typeName;
+
+    private String exampleJson;
+    private String typeInJson;
+    private String changedExampleJson;
 
     @BeforeAll
     public static void setUp(){
@@ -32,32 +34,47 @@ public class JsonFormatterTest {
 
     @Test
     public void whenCorrectJsonWithTypeGiven_thenAddTypeVariableInTheBeginning(){
-        String exampleJson = correctJsonInString;
-        String changedExampleJson = JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
-        String addedString = "\"@type\": \""+typeName+"\", ";
+        exampleJson = correctJsonInString;
+        changeTypeInJsonForNotEmptyJson();
 
-        assertTrue(changedExampleJson.startsWith("{"+addedString));
-        assertEquals(changedExampleJson.replace(addedString, ""), exampleJson);
+        changedExampleJson = JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
+
+        assertThatTypeIsAddedToJsonStringCorrectly();
     }
 
     @Test
-    public void whenWrongJsonWithTypeGiven_thenReturnException(){
-        String exampleJson = wrongJsonInString;
+    public void whenEmptyJsonWithTypeGiven_thenAddTypeVariableInTheBeginning(){
+        exampleJson = emptyJsonInString;
+        changeTypeInJsonForEmptyJson();
+
+        changedExampleJson = JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
+
+        assertThatTypeIsAddedToJsonStringCorrectly();
+    }
+
+    private void assertThatTypeIsAddedToJsonStringCorrectly() {
+        assertAll(() -> {
+            assertTrue(changedExampleJson.startsWith("{" + typeInJson));
+            assertEquals(changedExampleJson.replace(typeInJson, ""), exampleJson);
+        });
+    }
+
+    private void changeTypeInJsonForEmptyJson(){
+        typeInJson = "\"@type\": \""+typeName+"\"";
+    }
+
+    private void changeTypeInJsonForNotEmptyJson(){
+        typeInJson = "\"@type\": \""+typeName+"\", ";
+    }
+
+    @Test
+    public void whenWrongJsonWithTypeGiven_thenReturnIllegalArgumentException(){
+        exampleJson = wrongJsonInString;
         try{
             JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
         }catch (IllegalArgumentException e){
             String message = "Entered string is not a json.";
             assertEquals(message, e.getMessage());
         }
-    }
-
-    @Test
-    public void whenEmptyJsonWithTypeGiven_thenAddTypeVariableInTheBeginning(){
-        String exampleJson = emptyJsonInString;
-        String changedExampleJson = JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
-        String addedString = "\"@type\": \""+typeName+"\"";
-
-        assertTrue(changedExampleJson.startsWith("{"+addedString));
-        assertEquals(changedExampleJson.replace(addedString, ""), exampleJson);
     }
 }
