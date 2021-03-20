@@ -37,7 +37,7 @@ public class WeatherApi1Service implements WeatherService {
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateWeatherData(){
-        String urlJsonWeatherData = JsonReader.readJsonFromUrl(weatherDataUrl);
+        String urlJsonWeatherData = JsonReader.readJsonStringFromUrl(weatherDataUrl);
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
         week = (Week) JsonMapper.mapJsonToObject(resString, week);
     }
