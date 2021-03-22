@@ -8,7 +8,7 @@ import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Weather
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Week;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
-import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalDataReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.WeatherService;
 
@@ -37,7 +37,7 @@ public class WeatherApi1Service implements WeatherService {
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateWeatherData(){
-        String urlJsonWeatherData = JsonReader.readJsonFromUrl(weatherDataUrl);
+        String urlJsonWeatherData = ExternalDataReader.readStringFromUrl(weatherDataUrl);
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
         week = (Week) JsonMapper.mapJsonToObject(resString, week);
     }

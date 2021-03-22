@@ -160,17 +160,16 @@ public class JsonMapperTest {
         assertIfMapJsonToObjectMethodLoggedCorrectMessage();
     }
 
+    private void createJsonMapperLogger() {
+        jsonMapperLogger = (Logger) LoggerFactory.getLogger(JsonMapper.class);
+    }
+
     private void attachLogsListToJsonMapperLogger(){
-        createJsonMapperLogger();
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
         logsList = listAppender.list;
         jsonMapperLogger.addAppender(listAppender);
 
         listAppender.start();
-    }
-
-    private void createJsonMapperLogger() {
-        jsonMapperLogger = (Logger) LoggerFactory.getLogger(JsonMapper.class);
     }
 
     private void assertIfMapJsonToObjectMethodLoggedCorrectMessage() {

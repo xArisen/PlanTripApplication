@@ -5,7 +5,7 @@ import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distan
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
-import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalDataReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.DistanceService;
 
@@ -34,7 +34,7 @@ public class DistanceApi1Service implements DistanceService {
 
     private void updateDistanceData(){
         //TODO should try catch JsonFormatter.addTypeToJsonDataInTheBeginning exception?
-        String urlJsonDistanceData = JsonReader.readJsonFromUrl(distanceDataUrl);
+        String urlJsonDistanceData = ExternalDataReader.readStringFromUrl(distanceDataUrl);
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
         distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
     }
