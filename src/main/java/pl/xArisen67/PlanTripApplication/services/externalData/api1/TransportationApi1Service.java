@@ -7,7 +7,7 @@ import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Travel;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
-import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonReader;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalDataReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.TransportationService;
 
@@ -37,7 +37,7 @@ public class TransportationApi1Service implements TransportationService {
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateTransportationData(){
-        String urlJsonTransportationData = JsonReader.readJsonStringFromUrl(transportationDataUrl);
+        String urlJsonTransportationData = ExternalDataReader.readStringFromUrl(transportationDataUrl);
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
         transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
     }

@@ -12,17 +12,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 @Service
-public class JsonReader {
-    private static final Logger logger = LoggerFactory.getLogger(BufferedReader.class);
-    public static String readJsonStringFromUrl(String url){
+public class ExternalDataReader {
+    private static final Logger logger = LoggerFactory.getLogger(ExternalDataReader.class);
+
+    public static String readStringFromUrl(String url){
         HttpURLConnection con = null;
         int responseCode;
         StringBuffer response = new StringBuffer();
 
         try{
             con = getHttpURLConnection(url);
-
             responseCode = con.getResponseCode();
+
             BufferedReader in = getBufferedReaderForConnection(con);
             getDataFromBufferedReader(response, in);
         }catch(Exception e){
