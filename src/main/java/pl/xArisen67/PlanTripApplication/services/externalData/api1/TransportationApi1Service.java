@@ -2,6 +2,9 @@ package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
+import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Travel;
@@ -37,9 +40,18 @@ public class TransportationApi1Service implements TransportationService {
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateTransportationData(){
-        String urlJsonTransportationData = ExternalDataReader.readStringFromUrl(transportationDataUrl);
+        String urlJsonTransportationData = "";
+        try{
+        urlJsonTransportationData = ExternalDataReader.readStringFromUrl(transportationDataUrl);
+        }catch (GettingDataFromUrlException e){
+            //TODO
+        }
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
-        transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
+        try{
+            transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
+        }catch (JsonToObjectMappingException e){
+            //TODO
+        }
     }
 
     @Override

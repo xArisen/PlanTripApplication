@@ -2,6 +2,9 @@ package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
+import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
+import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.City;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Day;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Weather;
@@ -37,9 +40,18 @@ public class WeatherApi1Service implements WeatherService {
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
     private void updateWeatherData(){
-        String urlJsonWeatherData = ExternalDataReader.readStringFromUrl(weatherDataUrl);
+        String urlJsonWeatherData = "";
+        try {
+        urlJsonWeatherData = ExternalDataReader.readStringFromUrl(weatherDataUrl);
+        }catch (GettingDataFromUrlException e){
+            //TODO
+        }
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
-        week = (Week) JsonMapper.mapJsonToObject(resString, week);
+        try{
+            week = (Week) JsonMapper.mapJsonToObject(resString, week);
+        }catch (JsonToObjectMappingException e){
+            //TODO
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 
 import org.springframework.stereotype.Service;
+import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
+import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
@@ -33,10 +35,18 @@ public class DistanceApi1Service implements DistanceService {
     }
 
     private void updateDistanceData(){
-        //TODO should try catch JsonFormatter.addTypeToJsonDataInTheBeginning exception?
-        String urlJsonDistanceData = ExternalDataReader.readStringFromUrl(distanceDataUrl);
+        String urlJsonDistanceData = "";
+        try{
+        urlJsonDistanceData = ExternalDataReader.readStringFromUrl(distanceDataUrl);
+        }catch (GettingDataFromUrlException e){
+            //TODO
+        }
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
+        try{
         distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
+        }catch (JsonToObjectMappingException e){
+            //TODO
+        }
     }
 
     @Override
