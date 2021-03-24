@@ -5,23 +5,30 @@ import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalApiConnector;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalApiStringReader;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
-import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalDataReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.DistanceService;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Optional;
 
 @Service
 public class DistanceApi1Service implements DistanceService {
     private DistanceCollection distanceCollection;
-    private String distanceDataUrl;
+    private URL distanceDataUrl;
 
     //default takes Company1 data
     public DistanceApi1Service(){
-        distanceDataUrl = Company1.DISTANCE_DATA_URL.toString();
+        try {
+            distanceDataUrl = ExternalApiConnector.createUrlFromString(Company1.DISTANCE_DATA_URL.toString());
+        }catch (IllegalArgumentException e){
+            //TODO in every Ap1Service
+        }
         updateDistanceData();
     }
 
@@ -30,22 +37,24 @@ public class DistanceApi1Service implements DistanceService {
     }
 
     public void changeDistanceDataUrl(String distanceDataUrl) {
-        this.distanceDataUrl = distanceDataUrl;
+        this.distanceDataUrl = ExternalApiConnector.createUrlFromString(distanceDataUrl);
         updateDistanceData();
     }
 
     private void updateDistanceData(){
         String urlJsonDistanceData = "";
         try{
-        urlJsonDistanceData = ExternalDataReader.readStringFromUrl(distanceDataUrl);
+        urlJsonDistanceData = ExternalApiStringReader.readStringFromConnection(ExternalApiConnector.getHttpUrlConnection(distanceDataUrl));
         }catch (GettingDataFromUrlException e){
-            //TODO
+            //TODO in every Ap1Service
+        }catch (IOException e){
+            //TODO in every Ap1Service
         }
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
         try{
         distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
         }catch (JsonToObjectMappingException e){
-            //TODO
+            //TODO in every Ap1Service
         }
     }
 

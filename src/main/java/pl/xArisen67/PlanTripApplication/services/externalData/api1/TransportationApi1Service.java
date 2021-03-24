@@ -4,27 +4,33 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
-import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Travel;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalApiConnector;
+import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalApiStringReader;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonFormatter;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.JsonMapper;
-import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalDataReader;
 import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1;
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.TransportationService;
 
+import java.io.IOException;
+import java.net.URL;
 import java.time.LocalTime;
 import java.util.*;
 
 @Service
 public class TransportationApi1Service implements TransportationService {
     private Transportation transportation;
-    private String transportationDataUrl;
+    private URL transportationDataUrl;
 
     //default takes Company1 data
-    public TransportationApi1Service() throws InterruptedException{
-        transportationDataUrl = Company1.TRANSPORTATION_DATA_URL.toString();
+    public TransportationApi1Service() {
+        try {
+            transportationDataUrl = ExternalApiConnector.createUrlFromString(Company1.TRANSPORTATION_DATA_URL.toString());
+        }catch (IllegalArgumentException e){
+            //TODO in every Ap1Service
+        }
         updateTransportationData();
     }
 
@@ -34,23 +40,27 @@ public class TransportationApi1Service implements TransportationService {
 
     @Override
     public void changeTransportationDataUrl(String transportationDataUrl){
-        this.transportationDataUrl = transportationDataUrl;
+        this.transportationDataUrl = ExternalApiConnector.createUrlFromString(transportationDataUrl);
         updateTransportationData();
     }
 
-    @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
+    @Scheduled(fixedDelay = 1000 * 1 * 5) //Refresh time every 5 minutes
     private void updateTransportationData(){
         String urlJsonTransportationData = "";
         try{
-        urlJsonTransportationData = ExternalDataReader.readStringFromUrl(transportationDataUrl);
+            urlJsonTransportationData = ExternalApiStringReader.readStringFromConnection(
+                ExternalApiConnector.getHttpUrlConnection(transportationDataUrl)
+            );
         }catch (GettingDataFromUrlException e){
-            //TODO
+            //TODO in every Ap1Service
+        }catch (IOException e){
+            //TODO in every Ap1Service
         }
         String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
         try{
             transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
         }catch (JsonToObjectMappingException e){
-            //TODO
+            //TODO in every Ap1Service
         }
     }
 

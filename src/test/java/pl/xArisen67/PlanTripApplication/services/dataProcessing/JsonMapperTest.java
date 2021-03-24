@@ -1,19 +1,12 @@
 package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
@@ -163,7 +156,7 @@ public class JsonMapperTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
-    //TODO delete comments
+    //TODO delete code in comments
 
 /*    @Test
     public void whenJsonMappingToObjectGoesWrong_thenLogError() {
@@ -173,7 +166,7 @@ public class JsonMapperTest {
         JsonMapper.mapJsonToObject(wrongJsonInString, new Week());
 
         assertIfMapJsonToObjectMethodLoggedCorrectMessage();
-    }*/
+    }
 
     private void createJsonMapperLogger() {
         jsonMapperLogger = (Logger) LoggerFactory.getLogger(JsonMapper.class);
@@ -195,7 +188,7 @@ public class JsonMapperTest {
                     .getLevel());
         });
     }
-
+*/
     @Test
     public void whenNameAndValueGiven_thenMapItToHashMap() {
         String name = "time";
