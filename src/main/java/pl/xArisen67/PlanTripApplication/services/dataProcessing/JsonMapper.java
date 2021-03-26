@@ -12,14 +12,11 @@ import java.util.Map;
 
 public class JsonMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    //TODO delete comments
-    //private static final Logger logger = LoggerFactory.getLogger(JsonMapper.class);
 
     public static ExternalDataObject mapJsonToObject(String json, ExternalDataObject object) throws JsonToObjectMappingException{
         try {
             object = objectMapper.readValue(json, ExternalDataObject.class);
         }catch (JsonProcessingException e){
-            //logger.error("Context message", e);
             throw new JsonToObjectMappingException("Error during mapping Json string to object.", e);
         }
         return object;

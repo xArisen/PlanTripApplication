@@ -13,6 +13,7 @@ import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.DistanceService;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,30 +22,30 @@ import java.util.Optional;
 public class DistanceApi1Service implements DistanceService {
     private DistanceCollection distanceCollection;
     private URL distanceDataUrl;
+    //private static final Logger logger = LoggerFactory.getLogger(DistanceApi1Service.class);
+    //logger.error("Context message", e);
 
     //default takes Company1 data
-    public DistanceApi1Service(){
-        try {
-            distanceDataUrl = ExternalApiConnector.createUrlFromString(Company1.DISTANCE_DATA_URL.toString());
-        }catch (IllegalArgumentException e){
-            //TODO in every Ap1Service
-        }
+    public DistanceApi1Service() throws MalformedURLException {
+        changeDistanceDataUrl(Company1.DISTANCE_DATA_URL.toString());
         updateDistanceData();
     }
 
-    public DistanceApi1Service(String distanceDataUrl){
+    public DistanceApi1Service(String distanceDataUrl) throws MalformedURLException{
         changeDistanceDataUrl(distanceDataUrl);
     }
 
-    public void changeDistanceDataUrl(String distanceDataUrl) {
-        this.distanceDataUrl = ExternalApiConnector.createUrlFromString(distanceDataUrl);
+    public void changeDistanceDataUrl(String distanceDataUrl) throws MalformedURLException{
+        this.distanceDataUrl = new URL(distanceDataUrl);
         updateDistanceData();
     }
 
     private void updateDistanceData(){
         String urlJsonDistanceData = "";
         try{
-        urlJsonDistanceData = ExternalApiStringReader.readStringFromConnection(ExternalApiConnector.getHttpUrlConnection(distanceDataUrl));
+            urlJsonDistanceData = ExternalApiStringReader.readStringFromConnection(
+                    ExternalApiConnector.getHttpUrlConnection(distanceDataUrl)
+            );
         }catch (GettingDataFromUrlException e){
             //TODO in every Ap1Service
         }catch (IOException e){

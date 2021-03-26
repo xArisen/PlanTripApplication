@@ -4,8 +4,10 @@ import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.City;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Day;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Weather;
 
+import java.net.MalformedURLException;
+
 public interface WeatherService {
-    public void changeWeatherDataUrl(String weatherDataUrl);
+    public void changeWeatherDataUrl(String weatherDataUrl) throws MalformedURLException;
     public boolean checkIfWeatherForDayAndCityIsOkForBike(String sourceCity, String dayName);
     public Weather getDayWeatherForCity(String sourceCity, String dayName);
     public Day getDayWeatherForAllCities(String dayName);

@@ -16,6 +16,7 @@ import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.WeatherService;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -25,22 +26,18 @@ public class WeatherApi1Service implements WeatherService {
     private URL weatherDataUrl;
 
     //default takes Company1 data
-    public WeatherApi1Service(){
-        try {
-            weatherDataUrl = ExternalApiConnector.createUrlFromString(Company1.WEATHER_DATA_URL.toString());
-        }catch (IllegalArgumentException e){
-            //TODO in every Ap1Service
-        }
+    public WeatherApi1Service() throws MalformedURLException{
+        changeWeatherDataUrl(Company1.WEATHER_DATA_URL.toString());
         updateWeatherData();
     }
 
-    public WeatherApi1Service(String weatherDataUrl){
+    public WeatherApi1Service(String weatherDataUrl) throws MalformedURLException{
         changeWeatherDataUrl(weatherDataUrl);
     }
 
     @Override
-    public void changeWeatherDataUrl(String weatherDataUrl) {
-        this.weatherDataUrl = ExternalApiConnector.createUrlFromString(weatherDataUrl);
+    public void changeWeatherDataUrl(String weatherDataUrl) throws MalformedURLException{
+        this.weatherDataUrl = new URL(weatherDataUrl);
         updateWeatherData();
     }
 

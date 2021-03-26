@@ -15,6 +15,7 @@ import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.TransportationService;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalTime;
 import java.util.*;
@@ -25,22 +26,18 @@ public class TransportationApi1Service implements TransportationService {
     private URL transportationDataUrl;
 
     //default takes Company1 data
-    public TransportationApi1Service() {
-        try {
-            transportationDataUrl = ExternalApiConnector.createUrlFromString(Company1.TRANSPORTATION_DATA_URL.toString());
-        }catch (IllegalArgumentException e){
-            //TODO in every Ap1Service
-        }
+    public TransportationApi1Service() throws MalformedURLException {
+        changeTransportationDataUrl(Company1.TRANSPORTATION_DATA_URL.toString());
         updateTransportationData();
     }
 
-    public TransportationApi1Service(String transportationDataUrl){
+    public TransportationApi1Service(String transportationDataUrl) throws MalformedURLException{
         changeTransportationDataUrl(transportationDataUrl);
     }
 
     @Override
-    public void changeTransportationDataUrl(String transportationDataUrl){
-        this.transportationDataUrl = ExternalApiConnector.createUrlFromString(transportationDataUrl);
+    public void changeTransportationDataUrl(String transportationDataUrl) throws MalformedURLException{
+        this.transportationDataUrl = new URL(transportationDataUrl);
         updateTransportationData();
     }
 
