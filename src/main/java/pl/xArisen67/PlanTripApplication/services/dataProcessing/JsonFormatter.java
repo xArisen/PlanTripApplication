@@ -1,8 +1,7 @@
 package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
 
 public class JsonFormatter {
     private  static final ObjectMapper objectMapper = new ObjectMapper();
@@ -22,7 +21,7 @@ public class JsonFormatter {
         try {
             objectMapper.readTree(jsonInString);
             return true;
-        } catch (IOException e) {
+        } catch (JsonProcessingException e) {
             return false;
         }
     }

@@ -1,38 +1,25 @@
 package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
 
-@Service
-public class ExternalDataReader {
-    private static final Logger logger = LoggerFactory.getLogger(ExternalDataReader.class);
+public class ExternalApiStringReader {
 
-    public static String readStringFromUrl(String url){
-        HttpURLConnection con = null;
-        int responseCode;
+    public static String readStringFromConnection(HttpURLConnection connection) throws GettingDataFromUrlException{
         StringBuffer response = new StringBuffer();
 
         try{
-            con = getHttpURLConnection(url);
-            responseCode = con.getResponseCode();
-
-            BufferedReader in = getBufferedReaderForConnection(con);
+            BufferedReader in = getBufferedReaderForConnection(connection);
             getDataFromBufferedReader(response, in);
-        }catch(Exception e){
-            logger.error("Context message", e);
-        }finally {
-            if (con != null){
-                con.disconnect();
-            }
+        }catch(IOException e){
+            throw new GettingDataFromUrlException("Error during getting string from Url connection.", e);
         }
+
         return response.toString();
     }
 
@@ -50,10 +37,5 @@ public class ExternalDataReader {
                 new InputStreamReader(con.getInputStream())
         );
         return in;
-    }
-
-    public static HttpURLConnection getHttpURLConnection(String url) throws IOException {
-        URL obj = new URL(url);
-        return (HttpURLConnection) obj.openConnection();
     }
 }

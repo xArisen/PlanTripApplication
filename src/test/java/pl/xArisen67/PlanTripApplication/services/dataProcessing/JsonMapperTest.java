@@ -1,18 +1,13 @@
 package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.LoggerFactory;
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
@@ -131,13 +126,13 @@ public class JsonMapperTest {
     }
 
     @Test
-    public void whenJsonStringAndObjectGiven_thenMapItToObjectOfGivenType() {
+    public void whenJsonStringAndObjectGiven_thenMapItToObjectOfGivenType()  throws JsonToObjectMappingException{
         createObjectsFromJsonString();
 
         assertIfObjectsCreatedFromJsonStringAndPreCreatedObjectsAreEqual();
     }
 
-    private void createObjectsFromJsonString() {
+    private void createObjectsFromJsonString() throws JsonToObjectMappingException {
         weekObjectFromJson = (Week) JsonMapper.mapJsonToObject(jsonWeekDataWithType, new Week());
         transportationObjectFromJson = (Transportation) JsonMapper.mapJsonToObject(jsonTransportationDataWithType, new Transportation());
         distanceCollectionObjectFromJson = (DistanceCollection) JsonMapper.mapJsonToObject(jsonDistanceCollectionDataWithType, new DistanceCollection());
@@ -149,8 +144,21 @@ public class JsonMapperTest {
         assertEquals(distanceCollection, distanceCollectionObjectFromJson);
     }
 
-
     @Test
+    public void whenJsonMappingToObjectGoesWrong_thenThrowJsonToObjectMappingException(){
+        Exception exception = assertThrows(JsonToObjectMappingException.class, () -> {
+            JsonMapper.mapJsonToObject(wrongJsonInString, new Week());
+        });
+
+        String expectedMessage = "Error during mapping Json string to object.";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    //TODO delete code in comments
+
+/*    @Test
     public void whenJsonMappingToObjectGoesWrong_thenLogError() {
         createJsonMapperLogger();
         attachLogsListToJsonMapperLogger();
@@ -180,7 +188,7 @@ public class JsonMapperTest {
                     .getLevel());
         });
     }
-
+*/
     @Test
     public void whenNameAndValueGiven_thenMapItToHashMap() {
         String name = "time";

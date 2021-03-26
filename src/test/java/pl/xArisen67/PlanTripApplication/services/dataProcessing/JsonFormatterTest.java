@@ -3,6 +3,7 @@ package pl.xArisen67.PlanTripApplication.services.dataProcessing;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -70,11 +71,14 @@ public class JsonFormatterTest {
     @Test
     public void whenWrongJsonWithTypeGiven_thenReturnIllegalArgumentException(){
         exampleJson = wrongJsonInString;
-        try{
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             JsonFormatter.addTypeToJsonDataInTheBeginning(exampleJson, typeName);
-        }catch (IllegalArgumentException e){
-            String message = "Entered string is not a json.";
-            assertEquals(message, e.getMessage());
-        }
+        });
+
+        String expectedMessage = "Entered string is not a json.";
+        String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
