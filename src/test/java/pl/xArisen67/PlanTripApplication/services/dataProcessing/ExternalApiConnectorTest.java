@@ -25,24 +25,24 @@ public class ExternalApiConnectorTest {
     @Mock
     HttpURLConnection connection;
 
-    @Test
-    public void whenCorrectUrlStringGiven_thenReturnUrl() throws MalformedURLException {
-        URL expectedUrl = new URL(CORRECT_TEST_JSON_API_URL_AS_STRING);
-        URL returnedUrl = ExternalApiConnector.createUrlFromString(CORRECT_TEST_JSON_API_URL_AS_STRING);
-        assertEquals(expectedUrl, returnedUrl);
-    }
-
-    @Test
-    public void whenWrongUrlStringGiven_thenThrowIllegalArgumentException() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ExternalApiConnector.createUrlFromString(WRONG_TEST_JSON_API_URL_AS_STRING);
-        });
-
-        String expectedMessage = "Url cannot be created from passed string.";
-        String actualMessage = exception.getMessage();
-
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
+//    @Test
+//    public void whenCorrectUrlStringGiven_thenReturnUrl() throws MalformedURLException {
+//        URL expectedUrl = new URL(CORRECT_TEST_JSON_API_URL_AS_STRING);
+//        URL returnedUrl = ExternalApiConnector.createUrlFromString(CORRECT_TEST_JSON_API_URL_AS_STRING);
+//        assertEquals(expectedUrl, returnedUrl);
+//    }
+//
+//    @Test
+//    public void whenWrongUrlStringGiven_thenThrowIllegalArgumentException() {
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            ExternalApiConnector.createUrlFromString(WRONG_TEST_JSON_API_URL_AS_STRING);
+//        });
+//
+//        String expectedMessage = "Url cannot be created from passed string.";
+//        String actualMessage = exception.getMessage();
+//
+//        assertTrue(actualMessage.contains(expectedMessage));
+//    }
 
     @Test
     public void whenUrlGiven_thenReturnHttpURLConnection() throws IOException {
@@ -61,7 +61,7 @@ public class ExternalApiConnectorTest {
     }
 
     @Test
-    public void whenCreatingHttpUrlConnectionFails_thenReturnIOException() throws IOException {
+    public void whenCreatingHttpUrlConnectionFails_thenReturnIOException() {
         try(MockedStatic<ExternalApiConnector> externalApiConnectorMockedStatic = mockStatic(ExternalApiConnector.class)) {
             externalApiConnectorMockedStatic.when(() -> ExternalApiConnector.getHttpUrlConnection(url))
                     .thenThrow(new IOException("Error during creating connection."));

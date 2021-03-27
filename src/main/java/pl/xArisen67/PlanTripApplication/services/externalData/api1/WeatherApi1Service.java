@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
+import pl.xArisen67.PlanTripApplication.exceptions.UpdateDataException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.City;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Day;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.weather.Weather;
@@ -16,6 +17,7 @@ import pl.xArisen67.PlanTripApplication.services.externalData.providers.Company1
 import pl.xArisen67.PlanTripApplication.services.externalData.interfaces.WeatherService;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -25,40 +27,31 @@ public class WeatherApi1Service implements WeatherService {
     private URL weatherDataUrl;
 
     //default takes Company1 data
-    public WeatherApi1Service(){
-        try {
-            weatherDataUrl = ExternalApiConnector.createUrlFromString(Company1.WEATHER_DATA_URL.toString());
-        }catch (IllegalArgumentException e){
-            //TODO in every Ap1Service
-        }
+    public WeatherApi1Service() throws MalformedURLException, UpdateDataException{
+        changeWeatherDataUrl(Company1.WEATHER_DATA_URL.toString());
         updateWeatherData();
     }
 
-    public WeatherApi1Service(String weatherDataUrl){
+    public WeatherApi1Service(String weatherDataUrl) throws MalformedURLException, UpdateDataException{
         changeWeatherDataUrl(weatherDataUrl);
     }
 
     @Override
-    public void changeWeatherDataUrl(String weatherDataUrl) {
-        this.weatherDataUrl = ExternalApiConnector.createUrlFromString(weatherDataUrl);
+    public void changeWeatherDataUrl(String weatherDataUrl) throws MalformedURLException, UpdateDataException{
+        this.weatherDataUrl = new URL(weatherDataUrl);
         updateWeatherData();
     }
 
     @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
-    private void updateWeatherData(){
-        String urlJsonWeatherData = "";
-        try {
-        urlJsonWeatherData = ExternalApiStringReader.readStringFromConnection(ExternalApiConnector.getHttpUrlConnection(weatherDataUrl));
-        }catch (GettingDataFromUrlException e){
-            //TODO in every Ap1Service
-        }catch (IOException e){
-            //TODO in every Ap1Service
-        }
-        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
+    private void updateWeatherData()throws UpdateDataException{
         try{
+            String urlJsonWeatherData = ExternalApiStringReader.readStringFromConnection(
+                    ExternalApiConnector.getHttpUrlConnection(weatherDataUrl)
+            );
+            String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonWeatherData, "week");
             week = (Week) JsonMapper.mapJsonToObject(resString, week);
-        }catch (JsonToObjectMappingException e){
-            //TODO in every Ap1Service
+        }catch (GettingDataFromUrlException | JsonToObjectMappingException | IOException e){
+            throw new UpdateDataException("Updating local data, by using external API failed.", e);
         }
     }
 
