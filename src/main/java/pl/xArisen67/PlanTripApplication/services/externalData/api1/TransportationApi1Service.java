@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
+import pl.xArisen67.PlanTripApplication.exceptions.UpdateDataException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Timetable;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Transportation;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.transportation.Travel;
@@ -26,38 +27,31 @@ public class TransportationApi1Service implements TransportationService {
     private URL transportationDataUrl;
 
     //default takes Company1 data
-    public TransportationApi1Service() throws MalformedURLException {
+    public TransportationApi1Service() throws MalformedURLException, UpdateDataException {
         changeTransportationDataUrl(Company1.TRANSPORTATION_DATA_URL.toString());
         updateTransportationData();
     }
 
-    public TransportationApi1Service(String transportationDataUrl) throws MalformedURLException{
+    public TransportationApi1Service(String transportationDataUrl) throws MalformedURLException, UpdateDataException{
         changeTransportationDataUrl(transportationDataUrl);
     }
 
     @Override
-    public void changeTransportationDataUrl(String transportationDataUrl) throws MalformedURLException{
+    public void changeTransportationDataUrl(String transportationDataUrl) throws MalformedURLException, UpdateDataException{
         this.transportationDataUrl = new URL(transportationDataUrl);
         updateTransportationData();
     }
 
-    @Scheduled(fixedDelay = 1000 * 1 * 5) //Refresh time every 5 minutes
-    private void updateTransportationData(){
-        String urlJsonTransportationData = "";
-        try{
-            urlJsonTransportationData = ExternalApiStringReader.readStringFromConnection(
-                ExternalApiConnector.getHttpUrlConnection(transportationDataUrl)
+    @Scheduled(fixedDelay = 1000 * 60 * 5) //Refresh time every 5 minutes
+    private void updateTransportationData() throws UpdateDataException{
+        try {
+            String urlJsonTransportationData = ExternalApiStringReader.readStringFromConnection(
+                    ExternalApiConnector.getHttpUrlConnection(transportationDataUrl)
             );
-        }catch (GettingDataFromUrlException e){
-            //TODO in every Ap1Service
-        }catch (IOException e){
-            //TODO in every Ap1Service
-        }
-        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
-        try{
+            String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonTransportationData, "transportation");
             transportation = (Transportation) JsonMapper.mapJsonToObject(resString, transportation);
-        }catch (JsonToObjectMappingException e){
-            //TODO in every Ap1Service
+        }catch (GettingDataFromUrlException | JsonToObjectMappingException | IOException e){
+            throw new UpdateDataException("Updating local data, by using external API failed.", e);
         }
     }
 

@@ -3,6 +3,7 @@ package pl.xArisen67.PlanTripApplication.services.externalData.api1;
 import org.springframework.stereotype.Service;
 import pl.xArisen67.PlanTripApplication.exceptions.GettingDataFromUrlException;
 import pl.xArisen67.PlanTripApplication.exceptions.JsonToObjectMappingException;
+import pl.xArisen67.PlanTripApplication.exceptions.UpdateDataException;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.Distance;
 import pl.xArisen67.PlanTripApplication.models.externalData.api1.distance.DistanceCollection;
 import pl.xArisen67.PlanTripApplication.services.dataProcessing.ExternalApiConnector;
@@ -26,36 +27,29 @@ public class DistanceApi1Service implements DistanceService {
     //logger.error("Context message", e);
 
     //default takes Company1 data
-    public DistanceApi1Service() throws MalformedURLException {
+    public DistanceApi1Service() throws MalformedURLException, UpdateDataException {
         changeDistanceDataUrl(Company1.DISTANCE_DATA_URL.toString());
         updateDistanceData();
     }
 
-    public DistanceApi1Service(String distanceDataUrl) throws MalformedURLException{
+    public DistanceApi1Service(String distanceDataUrl) throws MalformedURLException, UpdateDataException{
         changeDistanceDataUrl(distanceDataUrl);
     }
 
-    public void changeDistanceDataUrl(String distanceDataUrl) throws MalformedURLException{
+    public void changeDistanceDataUrl(String distanceDataUrl) throws MalformedURLException, UpdateDataException {
         this.distanceDataUrl = new URL(distanceDataUrl);
         updateDistanceData();
     }
 
-    private void updateDistanceData(){
-        String urlJsonDistanceData = "";
+    public void updateDistanceData() throws UpdateDataException{
         try{
-            urlJsonDistanceData = ExternalApiStringReader.readStringFromConnection(
+            String urlJsonDistanceData = ExternalApiStringReader.readStringFromConnection(
                     ExternalApiConnector.getHttpUrlConnection(distanceDataUrl)
             );
-        }catch (GettingDataFromUrlException e){
-            //TODO in every Ap1Service
-        }catch (IOException e){
-            //TODO in every Ap1Service
-        }
-        String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
-        try{
-        distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
-        }catch (JsonToObjectMappingException e){
-            //TODO in every Ap1Service
+            String resString = JsonFormatter.addTypeToJsonDataInTheBeginning(urlJsonDistanceData, "distances");
+            distanceCollection = (DistanceCollection) JsonMapper.mapJsonToObject(resString, distanceCollection);
+        }catch (GettingDataFromUrlException | JsonToObjectMappingException | IOException e){
+            throw new UpdateDataException("Updating local data, by using external API failed.", e);
         }
     }
 
